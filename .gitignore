@@ -1,0 +1,38 @@
+## Ignore Visual Studio temporary files, build results, and user settings
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio 2015/2017/2019/2022 cache/options directory
+.vs/
+
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Mono auto generated files
+mono_crash.*
+
+## VS Code
+.vscode/
+
+## Rider
+.idea/
+
+## Publish/Deploy outputs
+publish/
+*.pubxml
+*.pubxml.user
