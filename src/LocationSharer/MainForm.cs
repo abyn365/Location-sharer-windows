@@ -106,6 +106,7 @@ public sealed class MainForm : Form
         Height = 520;
         FormBorderStyle = FormBorderStyle.FixedSingle;
         MaximizeBox = false;
+        MinimumSize = new Size(860, 520);
         BackColor = Color.Black; // True Black Background
 
         // Font family
@@ -264,10 +265,10 @@ public sealed class MainForm : Form
         {
             Text = "Ready.",
             Width = 280,
-            Height = 60,
+            Height = 40,
             Font = new Font("Segoe UI", 8.5f),
             ForeColor = Color.FromArgb(161, 161, 170),
-            Margin = new Padding(0),
+            Margin = new Padding(0, 4, 0, 0),
             AutoEllipsis = true
         };
 
@@ -364,7 +365,7 @@ public sealed class MainForm : Form
             Left = 20,
             Top = 195,
             Width = 460,
-            Height = 255
+            Height = 285
         };
 
         var activityTitle = new Label
@@ -406,7 +407,7 @@ public sealed class MainForm : Form
             Text = "No active status details",
             Left = 15,
             Width = 430,
-            Height = 32,
+            Height = 48,
             Font = new Font("Segoe UI", 8.5f),
             ForeColor = Color.FromArgb(161, 161, 170),
             BackColor = Color.Transparent,
@@ -446,7 +447,7 @@ public sealed class MainForm : Form
             Text = "Not listening to Spotify",
             Left = 110,
             Width = 330,
-            Height = 24, // Increased height headroom to prevent letter clipping
+            Height = 28,
             Font = boldFont,
             ForeColor = Color.White,
             BackColor = Color.Transparent,
@@ -458,7 +459,7 @@ public sealed class MainForm : Form
             Text = "-",
             Left = 110,
             Width = 330,
-            Height = 20, // Increased height headroom
+            Height = 22,
             Font = new Font("Segoe UI", 8.5f),
             ForeColor = Color.FromArgb(161, 161, 170),
             BackColor = Color.Transparent,
@@ -470,7 +471,7 @@ public sealed class MainForm : Form
             Text = "-",
             Left = 110,
             Width = 330,
-            Height = 20, // Increased height headroom
+            Height = 22,
             Font = new Font("Segoe UI", 8.5f),
             ForeColor = Color.FromArgb(161, 161, 170),
             BackColor = Color.Transparent,
@@ -527,10 +528,10 @@ public sealed class MainForm : Form
 
         int trackTop = actTop;
         _spotifyTrack.Top = trackTop;
-        trackTop += _spotifyTrack.Height + 2;
+        trackTop += _spotifyTrack.Height + 4;
 
         _spotifyArtist.Top = trackTop;
-        trackTop += _spotifyArtist.Height + 2;
+        trackTop += _spotifyArtist.Height + 4;
 
         _spotifyAlbum.Top = trackTop;
         trackTop += _spotifyAlbum.Height + 4;
@@ -600,10 +601,13 @@ public sealed class MainForm : Form
             Text = "-",
             Dock = DockStyle.Top,
             Height = 45,
+            Width = 130,
             Font = new Font("Segoe UI", 24f, FontStyle.Bold),
             ForeColor = numColor,
             TextAlign = ContentAlignment.BottomLeft,
-            BackColor = Color.Transparent
+            BackColor = Color.Transparent,
+            AutoEllipsis = true,
+            AutoSize = false
         };
 
         var textLabel = new Label

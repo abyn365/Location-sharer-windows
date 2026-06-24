@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\byan\\Location-sharer-windows\\src\\LocationSharer\\LocationSharer.csproj": {}
+    "/home/engine/project/src/LocationSharer/LocationSharer.csproj": {}
   },
   "projects": {
-    "D:\\byan\\Location-sharer-windows\\src\\LocationSharer\\LocationSharer.csproj": {
+    "/home/engine/project/src/LocationSharer/LocationSharer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\byan\\Location-sharer-windows\\src\\LocationSharer\\LocationSharer.csproj",
+        "projectUniqueName": "/home/engine/project/src/LocationSharer/LocationSharer.csproj",
         "projectName": "LocationSharer",
-        "projectPath": "D:\\byan\\Location-sharer-windows\\src\\LocationSharer\\LocationSharer.csproj",
-        "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
-        "outputPath": "D:\\byan\\Location-sharer-windows\\src\\LocationSharer\\obj\\",
+        "projectPath": "/home/engine/project/src/LocationSharer/LocationSharer.csproj",
+        "packagesPath": "/home/engine/.nuget/packages/",
+        "outputPath": "/home/engine/project/src/LocationSharer/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\ASUS\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/home/engine/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0-windows10.0.22621.0"
@@ -23,8 +23,7 @@
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net8.0-windows10.0.22621.0": {
-            "framework": "net8.0-windows10.0.22621",
+          "net8.0-windows10.0.22621": {
             "targetAlias": "net8.0-windows10.0.22621.0",
             "projectReferences": {}
           }
@@ -38,12 +37,10 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "10.0.300"
+        }
       },
       "frameworks": {
-        "net8.0-windows10.0.22621.0": {
-          "framework": "net8.0-windows10.0.22621",
+        "net8.0-windows10.0.22621": {
           "targetAlias": "net8.0-windows10.0.22621.0",
           "dependencies": {
             "Microsoft.NET.ILLink.Tasks": {
@@ -66,10 +63,6 @@
           "warn": true,
           "downloadDependencies": [
             {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.28, 8.0.28]"
-            },
-            {
               "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
               "version": "[8.0.28, 8.0.28]"
             },
@@ -78,16 +71,12 @@
               "version": "[8.0.28, 8.0.28]"
             },
             {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.28, 8.0.28]"
-            },
-            {
               "name": "Microsoft.NETCore.App.Runtime.win-x64",
               "version": "[8.0.28, 8.0.28]"
             },
             {
               "name": "Microsoft.Windows.SDK.NET.Ref",
-              "version": "[10.0.22621.57, 10.0.22621.57]"
+              "version": "[10.0.22621.56, 10.0.22621.56]"
             },
             {
               "name": "Microsoft.WindowsDesktop.App.Ref",
@@ -102,14 +91,14 @@
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             },
-            "Microsoft.Windows.SDK.NET.Ref.Windows": {
+            "Microsoft.Windows.SDK.NET.Ref": {
               "privateAssets": "all"
             },
             "Microsoft.WindowsDesktop.App.WindowsForms": {
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.422/PortableRuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {
