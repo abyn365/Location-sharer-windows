@@ -82,11 +82,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\byan\\LocationSharerWindowsRepo\\src\\LocationSharer\\LocationSharer.csproj",
+      "projectUniqueName": "D:\\byan\\Location-sharer-windows\\src\\LocationSharer\\LocationSharer.csproj",
       "projectName": "LocationSharer",
-      "projectPath": "D:\\byan\\LocationSharerWindowsRepo\\src\\LocationSharer\\LocationSharer.csproj",
+      "projectPath": "D:\\byan\\Location-sharer-windows\\src\\LocationSharer\\LocationSharer.csproj",
       "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
-      "outputPath": "D:\\byan\\LocationSharerWindowsRepo\\src\\LocationSharer\\obj\\",
+      "outputPath": "D:\\byan\\Location-sharer-windows\\src\\LocationSharer\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ASUS\\AppData\\Roaming\\NuGet\\NuGet.Config"
