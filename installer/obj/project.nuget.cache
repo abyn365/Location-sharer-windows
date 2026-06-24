@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "FJBKVTCMSfI=",
+  "dgSpecHash": "GNxLKTTCcLA=",
   "success": true,
-  "projectFilePath": "D:\\byan\\LocationSharerWindowsRepo\\installer\\LocationSharer.Installer.wixproj",
+  "projectFilePath": "D:\\byan\\Location-sharer-windows\\installer\\LocationSharer.Installer.wixproj",
   "expectedPackageFiles": [],
   "logs": []
 }
