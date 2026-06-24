@@ -49,7 +49,8 @@ public sealed class MainForm : Form
     private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
     private const int DWMWA_CAPTION_COLOR = 35;
     private const int DWMWA_TEXT_COLOR = 36;
-    private const int DWMWA_SYSTEMBACKDROP_TYPE = 38;
+    private const int DWMWA_MICA_EFFECT = 1029; // For Build 22000
+    private const int DWMWA_SYSTEMBACKDROP_TYPE = 38; // For Build 22621+
 
     // DWM Backdrop types
     private const int DWMSBT_AUTO = 0;
@@ -91,19 +92,20 @@ public sealed class MainForm : Form
     {
         if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22621))
         {
-            // Try Acrylic (4) first, fall back to Mica (2), then Auto (0)
+            // Try Acrylic (4) first, fall back to Mica (2)
             int backdropType = DWMSBT_ACRYLIC;
             int result = DwmSetWindowAttribute(handle, DWMWA_SYSTEMBACKDROP_TYPE, ref backdropType, sizeof(int));
             if (result != 0)
             {
                 backdropType = DWMSBT_MAINWINDOW;
-                result = DwmSetWindowAttribute(handle, DWMWA_SYSTEMBACKDROP_TYPE, ref backdropType, sizeof(int));
-                if (result != 0)
-                {
-                    backdropType = DWMSBT_AUTO;
-                    DwmSetWindowAttribute(handle, DWMWA_SYSTEMBACKDROP_TYPE, ref backdropType, sizeof(int));
-                }
+                DwmSetWindowAttribute(handle, DWMWA_SYSTEMBACKDROP_TYPE, ref backdropType, sizeof(int));
             }
+        }
+        else if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000))
+        {
+            // Fallback for original Windows 11 release (Build 22000)
+            int trueValue = 1;
+            DwmSetWindowAttribute(handle, DWMWA_MICA_EFFECT, ref trueValue, sizeof(int));
         }
     }
 
@@ -111,7 +113,6 @@ public sealed class MainForm : Form
     {
         base.OnHandleCreated(e);
         UseImmersiveDarkMode(Handle, true);
-        SetTitleBarColor(Handle, Color.Black);
         SetTitleTextColor(Handle, Color.White);
         SetWindowBackdrop(Handle);
     }
@@ -135,9 +136,10 @@ public sealed class MainForm : Form
         FormBorderStyle = FormBorderStyle.FixedSingle;
         MaximizeBox = false;
         MinimumSize = new Size(880, 560);
-        BackColor = Color.FromArgb(3, 3, 6); // Near-black base for glass backdrop
+        BackColor = Color.Black;
+        DoubleBuffered = true;
 
-        SetStyle(ControlStyles.SupportsTransparentBackColor | ControlStyles.AllPaintingInWmPaint, true);
+        SetStyle(ControlStyles.SupportsTransparentBackColor | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
 
         // Font family
         var uiFont = new Font("Segoe UI", 9f);
@@ -337,7 +339,7 @@ public sealed class MainForm : Form
         {
             Left = 20,
             Top = 50,
-            Width = 470,
+            Width = 500,
             Height = 140
         };
 
@@ -348,7 +350,7 @@ public sealed class MainForm : Form
             WrapContents = false,
             Left = 15,
             Top = 12,
-            Width = 440,
+            Width = 470,
             Height = 22,
             BackColor = Color.Transparent
         };
@@ -375,17 +377,17 @@ public sealed class MainForm : Form
 
         analyticsTitleFlow.Controls.AddRange([analyticsTitle, liveIndicator]);
 
-        // Modular panels to hold the statistics cleanly side-by-side - widened to 140px
+        // Modular panels to hold the statistics cleanly side-by-side - widened to 150px
         var activePanel = CreateStatGroup("Active Visitors", Color.FromArgb(16, 185, 129), out _activeNum);
         activePanel.Left = 15;
         activePanel.Top = 38;
 
         var viewsPanel = CreateStatGroup("Pageviews Today", Color.White, out _viewsNum);
-        viewsPanel.Left = 165;
+        viewsPanel.Left = 175;
         viewsPanel.Top = 38;
 
         var uniquesPanel = CreateStatGroup("Unique Visitors", Color.White, out _uniquesNum);
-        uniquesPanel.Left = 315;
+        uniquesPanel.Left = 335;
         uniquesPanel.Top = 38;
 
         analyticsCard.Controls.AddRange([analyticsTitleFlow, activePanel, viewsPanel, uniquesPanel]);
@@ -395,7 +397,7 @@ public sealed class MainForm : Form
         {
             Left = 20,
             Top = 205,
-            Width = 470,
+            Width = 500,
             Height = 280
         };
 
@@ -415,31 +417,33 @@ public sealed class MainForm : Form
             Text = "●",
             Left = 15,
             Width = 18,
-            Height = 20,
+            Height = 24,
             Font = new Font("Segoe UI", 12f),
             ForeColor = Color.FromArgb(161, 161, 170),
-            BackColor = Color.Transparent
+            BackColor = Color.Transparent,
+            AutoSize = false
         };
 
         _discordStatusLbl = new Label
         {
             Text = "Offline",
             Left = 35,
-            Width = 410,
-            Height = 20,
+            Width = 440,
+            Height = 24,
             Font = boldFont,
             ForeColor = Color.White,
             BackColor = Color.Transparent,
-            AutoEllipsis = true
+            AutoEllipsis = true,
+            AutoSize = false
         };
 
         _discordActivityLbl = new Label
         {
             Text = "No active status details",
             Left = 15,
-            Width = 430,
+            Width = 460,
             AutoSize = true,
-            MaximumSize = new Size(430, 0),
+            MaximumSize = new Size(460, 0),
             Font = new Font("Segoe UI", 8.5f),
             ForeColor = Color.FromArgb(161, 161, 170),
             BackColor = Color.Transparent,
@@ -449,7 +453,7 @@ public sealed class MainForm : Form
         var separator = new Panel
         {
             Height = 1,
-            Width = 430,
+            Width = 460,
             Left = 15,
             BackColor = Color.FromArgb(60, 255, 255, 255) // Subtle glass-divider
         };
@@ -478,9 +482,9 @@ public sealed class MainForm : Form
         {
             Text = "Not listening to Spotify",
             Left = 110,
-            Width = 330,
+            Width = 360,
             Height = 28,
-            MaximumSize = new Size(330, 28),
+            MaximumSize = new Size(360, 28),
             Font = boldFont,
             ForeColor = Color.White,
             BackColor = Color.Transparent,
@@ -491,9 +495,9 @@ public sealed class MainForm : Form
         {
             Text = "-",
             Left = 110,
-            Width = 330,
+            Width = 360,
             Height = 22,
-            MaximumSize = new Size(330, 22),
+            MaximumSize = new Size(360, 22),
             Font = new Font("Segoe UI", 8.5f),
             ForeColor = Color.FromArgb(161, 161, 170),
             BackColor = Color.Transparent,
@@ -504,9 +508,9 @@ public sealed class MainForm : Form
         {
             Text = "-",
             Left = 110,
-            Width = 330,
+            Width = 360,
             Height = 22,
-            MaximumSize = new Size(330, 22),
+            MaximumSize = new Size(360, 22),
             Font = new Font("Segoe UI", 8.5f),
             ForeColor = Color.FromArgb(161, 161, 170),
             BackColor = Color.Transparent,
@@ -518,7 +522,7 @@ public sealed class MainForm : Form
             Text = "Play on Spotify",
             Left = 110,
             Width = 120,
-            Height = 24,
+            Height = 28,
             Visible = false
         };
         StyleButton(_playSpotifyBtn, Color.FromArgb(14, 165, 233), Color.FromArgb(3, 105, 161), Color.White); // Sky-500 & Sky-700
@@ -627,8 +631,8 @@ public sealed class MainForm : Form
     {
         var panel = new Panel
         {
-            Width = 140,
-            Height = 75,
+            Width = 150,
+            Height = 80,
             BackColor = Color.Transparent
         };
 
@@ -636,13 +640,13 @@ public sealed class MainForm : Form
         {
             Text = "-",
             Dock = DockStyle.Top,
-            Height = 45,
-            Width = 140,
-            MinimumSize = new Size(140, 45),
-            MaximumSize = new Size(140, 45),
+            Height = 50,
+            Width = 150,
+            MinimumSize = new Size(150, 50),
+            MaximumSize = new Size(150, 50),
             Font = new Font("Segoe UI", 24f, FontStyle.Bold),
             ForeColor = numColor,
-            TextAlign = ContentAlignment.BottomLeft,
+            TextAlign = ContentAlignment.MiddleLeft,
             BackColor = Color.Transparent,
             AutoEllipsis = true,
             AutoSize = false
