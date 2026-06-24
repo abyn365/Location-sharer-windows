@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LocationSharer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+412be900fbca181055c3e10acb6e13baa7defc5f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+da7fe687350c6aceeb76369e65a2aeef63f169e2")]
 [assembly: System.Reflection.AssemblyProductAttribute("LocationSharer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LocationSharer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
