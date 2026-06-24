@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "R8a3ypQCYpc=",
+  "dgSpecHash": "W2D6AsfGyVM=",
   "success": true,
-  "projectFilePath": "D:\\byan\\LocationSharerWindowsRepo\\src\\LocationSharer\\LocationSharer.csproj",
+  "projectFilePath": "D:\\byan\\Location-sharer-windows\\src\\LocationSharer\\LocationSharer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ASUS\\.nuget\\packages\\microsoft.net.illink.tasks\\8.0.28\\microsoft.net.illink.tasks.8.0.28.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.28\\microsoft.netcore.app.ref.8.0.28.nupkg.sha512",

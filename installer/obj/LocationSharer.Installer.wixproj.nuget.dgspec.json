@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\byan\\LocationSharerWindowsRepo\\installer\\LocationSharer.Installer.wixproj": {}
+    "D:\\byan\\Location-sharer-windows\\installer\\LocationSharer.Installer.wixproj": {}
   },
   "projects": {
-    "D:\\byan\\LocationSharerWindowsRepo\\installer\\LocationSharer.Installer.wixproj": {
+    "D:\\byan\\Location-sharer-windows\\installer\\LocationSharer.Installer.wixproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\byan\\LocationSharerWindowsRepo\\installer\\LocationSharer.Installer.wixproj",
+        "projectUniqueName": "D:\\byan\\Location-sharer-windows\\installer\\LocationSharer.Installer.wixproj",
         "projectName": "LocationSharer.Installer",
-        "projectPath": "D:\\byan\\LocationSharerWindowsRepo\\installer\\LocationSharer.Installer.wixproj",
+        "projectPath": "D:\\byan\\Location-sharer-windows\\installer\\LocationSharer.Installer.wixproj",
         "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
-        "outputPath": "D:\\byan\\LocationSharerWindowsRepo\\installer\\obj\\",
+        "outputPath": "D:\\byan\\Location-sharer-windows\\installer\\obj\\",
         "projectStyle": "PackageReference",
         "UsingMicrosoftNETSdk": false,
         "configFilePaths": [
