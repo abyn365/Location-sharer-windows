@@ -13,7 +13,7 @@ public sealed class MainForm : Form
     private readonly PersonalSiteService _siteService;
     private readonly NotifyIcon _tray;
     private bool _isExiting;
-    
+
     // Settings UI Controls
     private readonly TextBox _endpointBox;
     private readonly TextBox _secretBox;
@@ -41,7 +41,7 @@ public sealed class MainForm : Form
     private string? _currentArtUrl;
     private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(10) };
 
-    // Windows DWM APIs for custom dark title bars
+    // Windows DWM APIs for custom dark title bars and backdrop
     [DllImport("dwmapi.dll")]
     private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
@@ -49,6 +49,13 @@ public sealed class MainForm : Form
     private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
     private const int DWMWA_CAPTION_COLOR = 35;
     private const int DWMWA_TEXT_COLOR = 36;
+    private const int DWMWA_SYSTEMBACKDROP_TYPE = 38;
+
+    // DWM Backdrop types
+    private const int DWMSBT_AUTO = 0;
+    private const int DWMSBT_MAINWINDOW = 2; // Mica
+    private const int DWMSBT_TABBEDWINDOW = 3;
+    private const int DWMSBT_ACRYLIC = 4;
 
     private static void UseImmersiveDarkMode(IntPtr handle, bool enabled)
     {
@@ -80,12 +87,33 @@ public sealed class MainForm : Form
         }
     }
 
+    private static void SetWindowBackdrop(IntPtr handle)
+    {
+        if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22621))
+        {
+            // Try Acrylic (4) first, fall back to Mica (2), then Auto (0)
+            int backdropType = DWMSBT_ACRYLIC;
+            int result = DwmSetWindowAttribute(handle, DWMWA_SYSTEMBACKDROP_TYPE, ref backdropType, sizeof(int));
+            if (result != 0)
+            {
+                backdropType = DWMSBT_MAINWINDOW;
+                result = DwmSetWindowAttribute(handle, DWMWA_SYSTEMBACKDROP_TYPE, ref backdropType, sizeof(int));
+                if (result != 0)
+                {
+                    backdropType = DWMSBT_AUTO;
+                    DwmSetWindowAttribute(handle, DWMWA_SYSTEMBACKDROP_TYPE, ref backdropType, sizeof(int));
+                }
+            }
+        }
+    }
+
     protected override void OnHandleCreated(EventArgs e)
     {
         base.OnHandleCreated(e);
         UseImmersiveDarkMode(Handle, true);
         SetTitleBarColor(Handle, Color.Black);
         SetTitleTextColor(Handle, Color.White);
+        SetWindowBackdrop(Handle);
     }
 
     public MainForm()
@@ -102,12 +130,14 @@ public sealed class MainForm : Form
         // Form settings
         Text = "LocationSharer Dashboard";
         StartPosition = FormStartPosition.CenterScreen;
-        Width = 860;
-        Height = 520;
+        Width = 880;
+        Height = 560;
         FormBorderStyle = FormBorderStyle.FixedSingle;
         MaximizeBox = false;
-        MinimumSize = new Size(860, 520);
-        BackColor = Color.Black; // True Black Background
+        MinimumSize = new Size(880, 560);
+        BackColor = Color.FromArgb(3, 3, 6); // Near-black base for glass backdrop
+
+        SetStyle(ControlStyles.SupportsTransparentBackColor | ControlStyles.AllPaintingInWmPaint, true);
 
         // Font family
         var uiFont = new Font("Segoe UI", 9f);
@@ -117,7 +147,7 @@ public sealed class MainForm : Form
         var settingsPanel = new Panel
         {
             Dock = DockStyle.Fill,
-            BackColor = Color.FromArgb(9, 9, 11), // Zinc-950 Surface
+            BackColor = Color.FromArgb(170, 8, 8, 12), // Semi-transparent very dark surface
             Padding = new Padding(0)
         };
 
@@ -265,7 +295,8 @@ public sealed class MainForm : Form
         {
             Text = "Ready.",
             Width = 280,
-            Height = 40,
+            Height = 48,
+            MinimumSize = new Size(280, 48),
             Font = new Font("Segoe UI", 8.5f),
             ForeColor = Color.FromArgb(161, 161, 170),
             Margin = new Padding(0, 4, 0, 0),
@@ -287,7 +318,7 @@ public sealed class MainForm : Form
         var monitorPanel = new Panel
         {
             Dock = DockStyle.Fill,
-            BackColor = Color.Black, // True Black Background
+            BackColor = Color.Transparent, // Fully transparent to let DWM backdrop show through
             Padding = new Padding(20)
         };
 
@@ -301,13 +332,13 @@ public sealed class MainForm : Form
             AutoSize = true
         };
 
-        // Visitor Stats Card (RoundedPanel)
+        // Visitor Stats Card (RoundedPanel) - widened for better stat spacing
         var analyticsCard = new RoundedPanel
         {
             Left = 20,
             Top = 50,
-            Width = 460,
-            Height = 130
+            Width = 470,
+            Height = 140
         };
 
         // FlowLayoutPanel for the title and indicator side-by-side without overlaps
@@ -317,7 +348,7 @@ public sealed class MainForm : Form
             WrapContents = false,
             Left = 15,
             Top = 12,
-            Width = 430,
+            Width = 440,
             Height = 22,
             BackColor = Color.Transparent
         };
@@ -344,7 +375,7 @@ public sealed class MainForm : Form
 
         analyticsTitleFlow.Controls.AddRange([analyticsTitle, liveIndicator]);
 
-        // Modular panels to hold the statistics cleanly side-by-side
+        // Modular panels to hold the statistics cleanly side-by-side - widened to 140px
         var activePanel = CreateStatGroup("Active Visitors", Color.FromArgb(16, 185, 129), out _activeNum);
         activePanel.Left = 15;
         activePanel.Top = 38;
@@ -359,13 +390,13 @@ public sealed class MainForm : Form
 
         analyticsCard.Controls.AddRange([analyticsTitleFlow, activePanel, viewsPanel, uniquesPanel]);
 
-        // Discord & Spotify Card (RoundedPanel)
+        // Discord & Spotify Card (RoundedPanel) - widened and height adjusted
         var activityCard = new RoundedPanel
         {
             Left = 20,
-            Top = 195,
-            Width = 460,
-            Height = 285
+            Top = 205,
+            Width = 470,
+            Height = 280
         };
 
         var activityTitle = new Label
@@ -407,7 +438,8 @@ public sealed class MainForm : Form
             Text = "No active status details",
             Left = 15,
             Width = 430,
-            Height = 48,
+            AutoSize = true,
+            MaximumSize = new Size(430, 0),
             Font = new Font("Segoe UI", 8.5f),
             ForeColor = Color.FromArgb(161, 161, 170),
             BackColor = Color.Transparent,
@@ -419,7 +451,7 @@ public sealed class MainForm : Form
             Height = 1,
             Width = 430,
             Left = 15,
-            BackColor = Color.FromArgb(39, 39, 42) // Zinc-800 border
+            BackColor = Color.FromArgb(60, 255, 255, 255) // Subtle glass-divider
         };
 
         var spotifyHeader = new Label
@@ -448,6 +480,7 @@ public sealed class MainForm : Form
             Left = 110,
             Width = 330,
             Height = 28,
+            MaximumSize = new Size(330, 28),
             Font = boldFont,
             ForeColor = Color.White,
             BackColor = Color.Transparent,
@@ -460,6 +493,7 @@ public sealed class MainForm : Form
             Left = 110,
             Width = 330,
             Height = 22,
+            MaximumSize = new Size(330, 22),
             Font = new Font("Segoe UI", 8.5f),
             ForeColor = Color.FromArgb(161, 161, 170),
             BackColor = Color.Transparent,
@@ -472,6 +506,7 @@ public sealed class MainForm : Form
             Left = 110,
             Width = 330,
             Height = 22,
+            MaximumSize = new Size(330, 22),
             Font = new Font("Segoe UI", 8.5f),
             ForeColor = Color.FromArgb(161, 161, 170),
             BackColor = Color.Transparent,
@@ -516,6 +551,7 @@ public sealed class MainForm : Form
         actTop += Math.Max(_discordDot.Height, _discordStatusLbl.Height) + 4;
 
         _discordActivityLbl.Top = actTop;
+        // Use the auto-sized height for dynamic layout
         actTop += _discordActivityLbl.Height + 10;
 
         separator.Top = actTop;
@@ -551,7 +587,7 @@ public sealed class MainForm : Form
             Dock = DockStyle.Fill,
             ColumnCount = 2,
             RowCount = 1,
-            BackColor = Color.Black
+            BackColor = Color.Transparent
         };
         mainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 320));
         mainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
@@ -591,7 +627,7 @@ public sealed class MainForm : Form
     {
         var panel = new Panel
         {
-            Width = 130,
+            Width = 140,
             Height = 75,
             BackColor = Color.Transparent
         };
@@ -601,7 +637,9 @@ public sealed class MainForm : Form
             Text = "-",
             Dock = DockStyle.Top,
             Height = 45,
-            Width = 130,
+            Width = 140,
+            MinimumSize = new Size(140, 45),
+            MaximumSize = new Size(140, 45),
             Font = new Font("Segoe UI", 24f, FontStyle.Bold),
             ForeColor = numColor,
             TextAlign = ContentAlignment.BottomLeft,
@@ -646,12 +684,13 @@ public sealed class MainForm : Form
     {
         button.FlatStyle = FlatStyle.Flat;
         button.FlatAppearance.BorderSize = 0;
-        button.BackColor = backColor;
+        button.BackColor = Color.FromArgb(230, backColor.R, backColor.G, backColor.B);
         button.ForeColor = foreColor;
         button.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
         button.Cursor = Cursors.Hand;
-        button.MouseEnter += (_, _) => button.BackColor = hoverColor;
-        button.MouseLeave += (_, _) => button.BackColor = backColor;
+        var originalBackColor = backColor;
+        button.MouseEnter += (_, _) => button.BackColor = Color.FromArgb(230, hoverColor.R, hoverColor.G, hoverColor.B);
+        button.MouseLeave += (_, _) => button.BackColor = Color.FromArgb(230, originalBackColor.R, originalBackColor.G, originalBackColor.B);
     }
 
     private async void OnVisibleChanged(object? sender, EventArgs e)
@@ -760,7 +799,7 @@ public sealed class MainForm : Form
             _spotifyAlbum.Text = $"on {track.Album}";
             _playSpotifyBtn.Tag = track.SongUrl;
             _playSpotifyBtn.Visible = true;
-            
+
             _ = LoadAlbumArtAsync(track.AlbumArtUrl);
         }
         else
@@ -795,7 +834,7 @@ public sealed class MainForm : Form
             var bytes = await Http.GetByteArrayAsync(url).ConfigureAwait(false);
             using var ms = new MemoryStream(bytes);
             var img = Image.FromStream(ms);
-            
+
             if (InvokeRequired)
             {
                 BeginInvoke(() => { _spotifyArt.Image = img; });
@@ -929,16 +968,16 @@ public sealed class MainForm : Form
         if (_service.IsRunning)
         {
             _toggleButton.Text = "Stop sharing";
-            _toggleButton.BackColor = Color.FromArgb(239, 68, 68); // Red-500
-            _toggleButton.MouseEnter += (_, _) => _toggleButton.BackColor = Color.FromArgb(220, 38, 38);
-            _toggleButton.MouseLeave += (_, _) => _toggleButton.BackColor = Color.FromArgb(239, 68, 68);
+            _toggleButton.BackColor = Color.FromArgb(230, 239, 68, 68); // Red-500 with alpha
+            _toggleButton.MouseEnter += (_, _) => _toggleButton.BackColor = Color.FromArgb(230, 220, 38, 38);
+            _toggleButton.MouseLeave += (_, _) => _toggleButton.BackColor = Color.FromArgb(230, 239, 68, 68);
         }
         else
         {
             _toggleButton.Text = "Start sharing";
-            _toggleButton.BackColor = Color.FromArgb(14, 165, 233); // Sky-500
-            _toggleButton.MouseEnter += (_, _) => _toggleButton.BackColor = Color.FromArgb(3, 105, 161);
-            _toggleButton.MouseLeave += (_, _) => _toggleButton.BackColor = Color.FromArgb(14, 165, 233);
+            _toggleButton.BackColor = Color.FromArgb(230, 14, 165, 233); // Sky-500 with alpha
+            _toggleButton.MouseEnter += (_, _) => _toggleButton.BackColor = Color.FromArgb(230, 3, 105, 161);
+            _toggleButton.MouseLeave += (_, _) => _toggleButton.BackColor = Color.FromArgb(230, 14, 165, 233);
         }
     }
 
@@ -948,7 +987,7 @@ public sealed class MainForm : Form
         _settings.Secret = _secretBox.Text.Trim();
         _settings.IntervalMinutes = (int)_intervalBox.Value;
         SettingsStore.Save(_settings);
-        
+
         _service.UpdateSettings(_settings);
         SetStatus("Settings saved.");
     }
