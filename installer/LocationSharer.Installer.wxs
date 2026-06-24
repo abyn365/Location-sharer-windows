@@ -48,8 +48,8 @@
       <Custom
           Action="RemoveStartupTask"
           Before="RemoveFiles"
-          Condition="Installed AND REMOVE='ALL'" />
-
+          Condition='Installed AND REMOVE="ALL"' />
+          
     </InstallExecuteSequence>
 
     <StandardDirectory Id="ProgramFilesFolder">
