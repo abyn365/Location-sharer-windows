@@ -1,0 +1,45 @@
+name: build
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore app
+        working-directory: src/LocationSharer
+        run: dotnet restore
+
+      - name: Publish single-file app
+        working-directory: src/LocationSharer
+        run: dotnet publish -c Release -r win-x64 /p:PublishSingleFile=true /p:SelfContained=true
+
+      - name: Restore installer
+        working-directory: installer
+        run: dotnet restore
+
+      - name: Build installer
+        working-directory: installer
+        run: dotnet build -c Release
+
+      - name: Upload publish output
+        uses: actions/upload-artifact@v4
+        with:
+          name: LocationSharer-publish
+          path: src/LocationSharer/bin/Release/net8.0-windows10.0.22621.0/win-x64/publish/
+
+      - name: Upload installer output
+        uses: actions/upload-artifact@v4
+        with:
+          name: LocationSharer-installer
+          path: installer/bin/Release/

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+
+  <Package Name="LocationSharer"
+           Manufacturer="abyndotxyz"
+           Version="1.0.0"
+           UpgradeCode="8A9493CC-7F3D-4B67-9E6E-57A24719D5BC"
+           InstallerVersion="500"
+           Compressed="yes"
+           Scope="perMachine">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of LocationSharer is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Property Id="RUNONLOGON" Value="0" />
+    <Property Id="INSTALLFOLDER" Value="INSTALLFOLDER" />
+
+    <Feature Id="MainFeature" Title="LocationSharer" Level="1">
+      <ComponentGroupRef Id="AppFiles" />
+    </Feature>
+
+    <UI>
+      <TextStyle Id="WixUI_Font_Normal" FaceName="Segoe UI" Size="9" />
+    </UI>
+
+    <!-- Replace with a real icon file before shipping a branded installer. -->
+
+    <CustomAction Id="CreateStartupTask" Directory="INSTALLFOLDER"
+                  Execute="deferred" Impersonate="no"
+                  ExeCommand='cmd.exe /c schtasks /Create /TN "LocationSharer" /SC ONLOGON /RL LIMITED /F /TR "\"[INSTALLFOLDER]LocationSharer.exe\""' />
+    <CustomAction Id="RemoveStartupTask" Directory="INSTALLFOLDER"
+                  Execute="deferred" Impersonate="no"
+                  ExeCommand='cmd.exe /c schtasks /Delete /TN "LocationSharer" /F' />
+
+    <InstallExecuteSequence>
+      <Custom Action="CreateStartupTask" After="InstallFiles">RUNONLOGON=1</Custom>
+    </InstallExecuteSequence>
+
+    <InstallExecuteSequence>
+      <Custom Action="RemoveStartupTask" Before="RemoveFiles">Installed AND REMOVE="ALL"</Custom>
+    </InstallExecuteSequence>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="LocationSharer" />
+      </Directory>
+    </Directory>
+
+    <ComponentGroup Id="AppFiles" Directory="INSTALLFOLDER">
+      <Component Id="MainExe" Guid="A4AEF364-84F5-42C7-8B3E-83A69E7A6A8A">
+        <File Source="..\src\LocationSharer\bin\Release\net8.0-windows10.0.22621.0\win-x64\publish\LocationSharer.exe" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+  </Package>
+</Wix>

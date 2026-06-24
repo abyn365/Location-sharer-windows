@@ -1,0 +1,52 @@
+{
+  "version": 3,
+  "targets": {
+    "native,Version=v0.0": {}
+  },
+  "libraries": {},
+  "projectFileDependencyGroups": {
+    "native,Version=v0.0": []
+  },
+  "packageFolders": {
+    "C:\\Users\\ASUS\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "D:\\byan\\LocationSharerWindowsRepo\\installer\\LocationSharer.Installer.wixproj",
+      "projectName": "LocationSharer.Installer",
+      "projectPath": "D:\\byan\\LocationSharerWindowsRepo\\installer\\LocationSharer.Installer.wixproj",
+      "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
+      "outputPath": "D:\\byan\\LocationSharerWindowsRepo\\installer\\obj\\",
+      "projectStyle": "PackageReference",
+      "UsingMicrosoftNETSdk": false,
+      "configFilePaths": [
+        "C:\\Users\\ASUS\\AppData\\Roaming\\NuGet\\NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "native": {
+          "framework": "native",
+          "targetAlias": "net8.0",
+          "projectReferences": {}
+        }
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      }
+    },
+    "frameworks": {
+      "native": {
+        "framework": "native",
+        "targetAlias": "net8.0"
+      }
+    }
+  }
+}
