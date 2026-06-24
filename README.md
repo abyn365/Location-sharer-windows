@@ -1,6 +1,6 @@
 # LocationSharer for Windows
 
-A consent-first Windows tray app written in C# / .NET 8 that:
+A consent-first Windows tray app written in C# / .NET 8
 
 - shows a tray icon and a visible Start / Stop sharing control
 - asks for explicit user consent on first launch
